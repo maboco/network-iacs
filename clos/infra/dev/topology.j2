@@ -1,0 +1,28 @@
+name: clos
+
+topology:
+  kinds:
+    nokia_srlinux:
+      image: ghcr.io/nokia/srlinux:latest
+    linux:
+      image: ghcr.io/hellt/network-multitool
+
+  nodes:
+{% for device, data in devices.items() %}
+    {{ device }}:
+      kind: {{ data.kind }}
+      type: {{ data.type }}
+{% endfor %}
+{% for host, data in hosts.items() %}
+    {{ host }}:
+      kind: {{ data.kind }}
+      exec:
+{% for command in data.exec %}
+        - {{ command }}
+{% endfor %}
+{% endfor %}
+
+links:
+{% for link in links %}
+  - endpoints: ["{{ link.a }}", "{{ link.b }}"]
+{% endfor %}

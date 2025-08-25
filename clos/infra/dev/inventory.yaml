@@ -1,0 +1,28 @@
+devices:
+  leaf1:
+    kind: nokia_srlinux
+    type: ixrd2
+  leaf2:
+    kind: nokia_srlinux
+    type: ixrd2
+  spine1:
+    kind: nokia_srlinux
+    type: ixrd3
+
+hosts:
+  srv1:
+    kind: linux
+    exec:
+      - ip link set address 00:c1:ab:00:00:01 dev eth1
+      - ip addr add 192.168.0.1/24 dev eth1
+  srv2:
+    kind: linux
+    exec:
+      - ip link set address 00:c1:ab:00:00:02 dev eth1
+      - ip addr add 192.168.0.2/24 dev eth1
+  
+links:
+  - { a: "leaf1:e1-49", b: "spine1:e1-1" }
+  - { a: "leaf2:e1-49", b: "spine1:e1-2" }
+  - { a: "srv1:eth1", b: "leaf1:e1-1" }
+  - { a: "srv2:eth1", b: "leaf2:e1-1" }
