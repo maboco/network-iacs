@@ -12,7 +12,7 @@ topology:
     {{ device }}:
       kind: {{ data.kind }}
       type: {{ data.type }}
-      mgmt-ipv4: {{ data.mgmt-ipv4 }}
+      mgmt-ipv4: {{ data.mgmt_ipv4 }}
 {% endfor %}
 {% for host, data in hosts.items() %}
     {{ host }}:

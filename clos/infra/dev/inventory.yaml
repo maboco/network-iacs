@@ -2,15 +2,15 @@ devices:
   leaf1:
     kind: nokia_srlinux
     type: ixrd2
-    mgmt-ipv4: 172.20.20.10
+    mgmt_ipv4: 172.20.20.10
   leaf2:
     kind: nokia_srlinux
     type: ixrd2
-    mgmt-ipv4: 172.20.20.11
+    mgmt_ipv4: 172.20.20.11
   spine1:
     kind: nokia_srlinux
     type: ixrd3
-    mgmt-ipv4: 172.20.20.12
+    mgmt_ipv4: 172.20.20.12
 
 hosts:
   srv1:
