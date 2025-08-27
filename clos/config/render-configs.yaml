@@ -1,0 +1,23 @@
+- name: Generate configs
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - devices/leaf.yaml
+    - devices/spine.yaml
+  vars:
+    devices: "{{ leaf_devices | combine(spine_devices) }}"
+    templates_dir: "templates"
+    output_dir: "configs"
+  tasks:
+    - name: Create directory if not exist
+      ansible.builtin.file:
+        path: "{{ output_dir }}"
+        state: directory
+
+    - name: Render configs per device
+      template:
+        src: "{{ templates_dir }}/config.j2"
+        dest: "{{ output_dir }}/{{ item.key }}.cfg"
+      loop: "{{ devices | dict2items }}"
+      vars:
+        device: "{{ item.value }}"

@@ -12,6 +12,7 @@ topology:
     {{ device }}:
       kind: {{ data.kind }}
       type: {{ data.type }}
+      mgmt-ipv4: {{ data.mgmt-ipv4 }}
 {% endfor %}
 {% for host, data in hosts.items() %}
     {{ host }}:
@@ -22,7 +23,7 @@ topology:
 {% endfor %}
 {% endfor %}
 
-links:
+  links:
 {% for link in links %}
   - endpoints: ["{{ link.a }}", "{{ link.b }}"]
 {% endfor %}

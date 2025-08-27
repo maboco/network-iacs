@@ -1,0 +1,47 @@
+enter candidate
+
+# Interfaces
+{% for iface in device.interfaces %}
+set / interface {{ iface.name }}
+set / interface {{ iface.name }} subinterface {{ iface.subif }}
+set / interface {{ iface.name }} subinterface {{ iface.subif }} ipv4 admin-state enable
+set / interface {{ iface.name }} subinterface {{ iface.subif }} ipv4 address {{ iface.ipv4 }}
+{% endfor %}
+
+# System interface
+set / interface system0
+set / interface system0 admin-state enable
+set / interface system0 subinterface 0
+set / interface system0 subinterface 0 ipv4 admin-state enable
+set / interface system0 subinterface 0 ipv4 address {{ device.system_ip }}/32
+
+# Network-instance default
+set / network-instance default
+{% for iface in device.interfaces %}
+set / network-instance default interface {{ iface.name }}.{{ iface.subif }}
+{% endfor %}
+set / network-instance default interface system0.0
+
+# Routing policy
+set / routing-policy
+set / routing-policy policy all
+set / routing-policy policy all default-action
+set / routing-policy policy all default-action policy-result accept
+
+# BGP
+set / network-instance default protocols
+set / network-instance default protocols bgp
+set / network-instance default protocols bgp autonomous-system {{ device.as_number }}
+set / network-instance default protocols bgp router-id {{ device.router_id }}
+set / network-instance default protocols bgp group {{ device.bgp.peer_group }}
+set / network-instance default protocols bgp group {{ device.bgp.peer_group }} export-policy all
+set / network-instance default protocols bgp group {{ device.bgp.peer_group }} import-policy all
+set / network-instance default protocols bgp afi-safi ipv4-unicast
+set / network-instance default protocols bgp afi-safi ipv4-unicast admin-state enable
+{% for neigh in device.bgp.neighbors %}
+set / network-instance default protocols bgp neighbor {{ neigh.address }}
+set / network-instance default protocols bgp neighbor {{ neigh.address }} peer-as {{ neigh.peer_as }}
+set / network-instance default protocols bgp neighbor {{ neigh.address }} peer-group {{ device.bgp.peer_group }}
+{% endfor %}
+
+commit now
