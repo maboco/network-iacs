@@ -1,0 +1,10 @@
+- name: Generate Ansible inventory from resources.yaml
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - resources.yaml
+  tasks:
+    - name: Render inventory.j2 into inventory.yaml
+      ansible.builtin.template:
+        src: ./templates/inventory.j2
+        dest: ./inventory.yaml

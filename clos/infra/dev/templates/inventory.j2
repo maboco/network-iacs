@@ -1,0 +1,21 @@
+all:
+  vars:
+    ansible_network_os: nokia.srlinux.srlinux
+    # default connection type for nodes of this kind
+    # feel free to override this in your inventory
+    ansible_connection: ansible.netcommon.httpapi
+    ansible_user: admin
+    ansible_password: NokiaSrl1!
+  children:
+    leafs:
+      hosts:
+{% for name, props in devices.items() if 'leaf' in name %}
+        {{ name }}:
+          ansible_host: {{ props.mgmt_ipv4 }}
+{% endfor %}
+    spines:
+      hosts:
+{% for name, props in devices.items() if 'spine' in name %}
+        {{ name }}:
+          ansible_host: {{ props.mgmt_ipv4 }}
+{% endfor %}
